@@ -3,8 +3,10 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../shared/Navbar";
+import axios from "axios";
+import { USERS_API_END_POINT } from "@/utils/constants";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -13,13 +15,29 @@ const Login = () => {
     role:""
   })
 
+  const navigate = useNavigate();
+
   const handleChange = (e)=>{
     setInput({...input,[e.target.name]:e.target.value})
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit =async (e)=>{
     e.preventDefault();
-    console.log(input)
+
+    try {
+      const res = await axios.post(`${USERS_API_END_POINT}/login`,input,{
+        headers:{
+          "Content-Type":"application/json" 
+        },
+        withCredentials: true
+      })
+      if(res.data.sucess){
+        navigate("/");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

@@ -3,8 +3,11 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../shared/Navbar";
+import { USERS_API_END_POINT } from "@/utils/constants";
+import { toast } from "sonner";
+import axios from "axios";
 
 const SignIn = () => {
 
@@ -17,6 +20,8 @@ const SignIn = () => {
     file:""
   })
 
+  const navigate = useNavigate();
+
   const handleOnChange = (e)=>{
     setInput({...input, [e.target.name]:e.target.value})
   }
@@ -25,9 +30,39 @@ const SignIn = () => {
     setInput({...input, file:e.target.files?.[0]})
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit =async (e)=>{
     e.preventDefault();
-     console.log("inputs: ", input);
+    
+    const formData = new FormData();
+    formData.append("fullName", input.fullName);
+    formData.append("email", input.email);
+    formData.append("phoneNumber", input.phoneNumber);
+    formData.append("password", input.password);
+    formData.append("role", input.role);
+    if(input.file){
+      formData.append("file",input.file);
+    }
+
+      // Debugging line — check all data
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(key, value);
+      // }
+
+    try {
+      const res = await axios.post(`${USERS_API_END_POINT}/register`, formData, {
+        headers:{
+          "Content-Type":"multipart/form-data"
+        },
+        withCredentials:true,
+      })
+      console.log(res.data.message)
+      if(res.data.success){
+        navigate("/login")
+        toast.success(res.data.message)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
