@@ -7,9 +7,10 @@ import {
 import React from "react";
 import { Button } from "../ui/button";
 import {  LogOut, User2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
-  const user = true;
+  const user = false;
 
   return (
     <div className="bg-white">
@@ -29,22 +30,22 @@ function Navbar() {
 
           {!user ? (
             <div className="flex gap-2">
-              <Button variant="outline">login</Button>
-              <Button>signup</Button>
+              <Link to='/login'><Button variant="outline">login</Button></Link>
+              <Link to='/signup'><Button>signup</Button></Link>
             </div>
           ) : (
             <Popover>
               <PopoverTrigger asChild>
                 <Avatar className="w-10 h-10">
                   <AvatarImage
-                    className="rounded-full object-cover"
+                    className="rounded-full object-cover cursor-pointer"
                     src="https://github.com/shadcn.png"
                   />
                 </Avatar>
               </PopoverTrigger>
-              <PopoverContent className="w-80 border-2 rounded-2xl p-5 mt-1 mx-2 bg-gray-200">
+              <PopoverContent className="w-80 border-2 rounded-2xl p-5 mt-1 mx-2 bg-gray-300">
                 <div id="popover-box">
-                  <div className="flex items-center gap-2 ">
+                  <div className="flex items-center gap-10 mb-5 ">
                     <div>
                       <Avatar>
                         <AvatarImage
@@ -64,11 +65,11 @@ function Navbar() {
                   <div className="flex flex-col">
                     <div className="flex items-center gap-5 mx-2">
                       <User2 />
-                      <Button variant="link">view profile</Button>
+                      <Button variant="link" className="cursor-pointer">view profile</Button>
                     </div>
                     <div className="flex items-center gap-5 mx-2">
                       <LogOut />
-                      <Button variant="link">logOut</Button>
+                      <Button variant="link" className="cursor-pointer">logOut</Button>
                     </div>
                   </div>
                 </div>
