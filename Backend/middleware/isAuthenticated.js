@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 const isAunthenticated = async (req, res, next) => {
   try {
     const token = req.cookies?.token;
+    console.log('isToken', token)
     if (!token) {
       return res.status(401).json({
         message: "User not authenticated",
@@ -11,7 +12,7 @@ const isAunthenticated = async (req, res, next) => {
     }
 
     const decode = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
+    console.log('decode', decode)
     if (!decode) {
       return res.status(401).json({
         message: "Invalid token",

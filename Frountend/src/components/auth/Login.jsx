@@ -7,87 +7,131 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../shared/Navbar";
 import axios from "axios";
 import { USERS_API_END_POINT } from "@/utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
+import { setLoading } from "@/redux/authSlice";
+import toast from "react-hot-toast";
+
+
 
 const Login = () => {
   const [input, setInput] = useState({
-    email:"",
-    password:"",
-    role:""
-  })
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  const { loading } = useSelector((store) => store.auth);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleChange = (e)=>{
-    setInput({...input,[e.target.name]:e.target.value})
-  }
+  const handleChange = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit =async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    dispatch(setLoading(true));
+    console.log('loading: ', loading)
     try {
-      const res = await axios.post(`${USERS_API_END_POINT}/login`,input,{
-        headers:{
-          "Content-Type":"application/json" 
+      const res = await axios.post(`${USERS_API_END_POINT}/login`, input, {
+        headers: {
+          "Content-Type": "application/json",
         },
-        withCredentials: true
-      })
-      if(res.data.sucess){
+        withCredentials: true,
+      });
+      if (res.data.success) {
         navigate("/");
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+    finally{
+      dispatch(setLoading(false));
+    }
+  };
 
   return (
     <div>
-    <Navbar/>
-    <div className=" flex items-center justify-center mx-auto ">
-      <div id="form-div" className=" bg-white border-2 p-5 w-1/3 rounded-xl my-10">
+      <Navbar />
+      <div className=" flex items-center justify-center mx-auto ">
+        <div
+          id="form-div"
+          className=" bg-white border-2 p-5 w-1/3 rounded-xl my-10"
+        >
+          <form action="" onSubmit={handleSubmit}>
+            <h1 className="font-bold text-2xl flex justify-center">Login</h1>
 
-        <form action="" onSubmit={handleSubmit}>
-          <h1 className="font-bold text-2xl flex justify-center">Login</h1>
+            <div className="my-5 space-y-2">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                placeholder="email"
+                name="email"
+                value={input.email}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="my-5 space-y-2">
-            <Label>Email</Label>
-            <Input type="email" placeholder="email" name="email"
-            value={input.email}
-            onChange={handleChange}
-            />
-          </div>
+            <div className="my-2 space-y-2">
+              <Label>Password</Label>
+              <Input
+                type="password"
+                placeholder="password"
+                name="password"
+                value={input.password}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="my-2 space-y-2">
-            <Label>Password</Label>
-            <Input type="password" placeholder="password"
-            name="password" value={input.password} onChange={handleChange}
-            />
-          </div>
+            <div id="radio-div" className="flex items-center justify-between">
+              <RadioGroup className="flex items-center ">
+                <div className="flex items-center ">
+                  <Input
+                    type="radio"
+                    name="role"
+                    value="student"
+                    className="cursor-pointer"
+                    checked={input.role === "student"}
+                    onChange={handleChange}
+                  />
+                  <Label htmlFor="option-two">Student</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="radio"
+                    name="role"
+                    value="recruiter"
+                    className="cursor-pointer"
+                    onChange={handleChange}
+                    checked={input.role === "recruiter"}
+                  />
+                  <Label htmlFor="option-two">Recruiter</Label>
+                </div>
+              </RadioGroup>
+            </div>
 
-          <div id="radio-div" className="flex items-center justify-between">
-            <RadioGroup className='flex items-center ' >
-              <div className="flex items-center ">
-                <Input type="radio" name="role" value="student" 
-                className='cursor-pointer'
-                checked={input.role==="student"}
-                onChange={handleChange} />
-                <Label htmlFor="option-two">Student</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Input type="radio" name="role" value="recruiter" className='cursor-pointer' onChange={handleChange} 
-                checked={input.role==="recruiter"} />
-                <Label htmlFor="option-two">Recruiter</Label>
-              </div>
-            </RadioGroup>
-    
-          </div>
-          <Button className='w-full my-5'>Login</Button>
-          <span>Don't have an account? <Link to='/signup' className="text-blue-400">Create one</Link></span>
-        </form>
+            {loading ? (
+              <Button className="w-full my-5 cursor-pointer">
+                <Loader2 className="mr-4 h-4 w-4 animate-spin" /> loading!!
+              </Button>
+            ) : (
+              <Button className="w-full my-5 cursor-pointer">Login</Button>
+            )}
+
+            <span>
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-blue-400">
+                Create one
+              </Link>
+            </span>
+          </form>
+        </div>
       </div>
     </div>
-   </div> 
   );
-}
+};
 
-export default Login
+export default Login;

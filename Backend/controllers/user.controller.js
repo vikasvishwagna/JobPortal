@@ -53,7 +53,7 @@ export const loginUser = async (req, res) => {
     if (!email || !password || !role) {
       return res.status(400).json({
         message: "something is missing",
-        sucess: false,
+        success: false,
       });
     }
 
@@ -61,7 +61,7 @@ export const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         message: "invalid email or password",
-        sucess: false,
+        success: false,
       });
     }
 
@@ -69,24 +69,24 @@ export const loginUser = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(400).json({
         message: "invalid email or password",
-        sucess: false,
+        success: false,
       });
     }
 
     if (role !== user.role) {
       return res.status(400).json({
         message: "account doestn exist with corrent role",
-        sucess: false,
+        success: false,
       });
     }
 
-    const tokenData = {
-      userId: user._id,
-    };
+    const tokenData = { userId: user._id };
+    console.log("tokenData:", tokenData);//tokenData: { userId: new ObjectId('69027d38e9de6577c87b5e5c') }
 
     const token = await jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "1d",
     });
+    console.log("token", token)//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTAyN2QzOGU5ZGU2NTc3Yzg3YjVlNWMiLCJpYXQiOjE3NjIzMzIwOTQsImV4cCI6MTc2MjQxODQ5NH0.GHBwgXFEjEVBPr27H2famjOSr82f3PwB7CNKWWkHKiM
 
     user = {
       _id: user._id,
@@ -106,7 +106,7 @@ export const loginUser = async (req, res) => {
       })
       .json({
         message: `welcome back ${user.fullName}`,
-        sucess: true,
+        success: true,
       });
   } catch (error) {
     console.log(error);
@@ -179,3 +179,10 @@ export const updateUserProfile = async (req, res) => {
     console.log(error);
   }
 };
+
+
+/**notes:
+ *  const token = await jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });1. A JWT token is created by combining the payload (like userId, email), a secret key (process.env.ACCESS_TOKEN_SECRET), and an expiry time using jwt.sign(). This generates a digitally signed string that can be stored in cookies or headers. Later, when verified using jwt.verify(), it checks the token’s validity and returns the original payload(like userId, email) along with fields like iat (issued at) and exp (expiry), ensuring both data integrity and authentication.
+ */

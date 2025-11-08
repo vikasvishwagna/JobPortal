@@ -1,0 +1,35 @@
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { Search } from "lucide-react";
+
+const HeroSection = () => {
+  return (
+    <div className="text-center">
+      <div className="flex flex-col gap-5 my-10">
+        <span className=" bg-gray-200 text-red-600 font-medium rounded-full px-4 py-2 mx-auto">
+          No. 1 Job Hunt Website
+        </span>
+        <h1 className="text-5xl font-bold">
+          Search, Apply & <br /> Get Your{" "}
+          <span className="text-[#6A38C2]">Dream Jobs</span>
+        </h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
+          aspernatur temporibus nihil tempora dolor!
+        </p>
+        <div className="flex w-[35%] h-10 shadow-lg border border-gray-200 pl-3 rounded-full items-center gap-4 mx-auto">
+          <input
+            type="text"
+            placeholder="Find your dream jobs"
+            className="w-full outline-none"
+          />
+          <Button className="rounded-r-full h-10 cursor-pointer bg-[#6A38C2]">
+            <Search className="h-5 w-7" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HeroSection;
