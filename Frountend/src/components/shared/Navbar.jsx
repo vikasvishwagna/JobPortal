@@ -6,32 +6,48 @@ import {
 } from "@radix-ui/react-popover";
 import React from "react";
 import { Button } from "../ui/button";
-import {  LogOut, User2 } from "lucide-react";
+import { LogOut, User2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Navbar() {
-  const user = false;
+  const { user } = useSelector((store) => store.auth);
 
   return (
     <div className="bg-white">
       <div className=" flex items-center justify-between mx-auto max-w-7xl h-16">
         <div className="">
           <h1 className="text-2xl font-bold">
-            Next <span className="text-red-600">Hire</span>
+            <Link to="/">
+              Next <span className="text-red-600">Hire</span>
+            </Link>
           </h1>
         </div>
 
         <div id="right-items" className=" flex items-center gap-12">
           <ul className="flex font-medium items-center gap-2">
-            <li>Home</li>
-            <li>Jobs</li>
-            <li>Browser</li>
+            <li>
+              {" "}
+              <Link to="/"> Home </Link>{" "}
+            </li>
+            <li>
+              {" "}
+              <Link to="/jobs"> Jobs </Link>{" "}
+            </li>
+            <li>
+              {" "}
+              <Link to="/browse"> Browse </Link>{" "}
+            </li>
           </ul>
 
           {!user ? (
             <div className="flex gap-2">
-              <Link to='/login'><Button variant="outline">login</Button></Link>
-              <Link to='/signup'><Button>signup</Button></Link>
+              <Link to="/login">
+                <Button variant="outline">login</Button>
+              </Link>
+              <Link to="/signup">
+                <Button>signup</Button>
+              </Link>
             </div>
           ) : (
             <Popover>
@@ -65,11 +81,17 @@ function Navbar() {
                   <div className="flex flex-col">
                     <div className="flex items-center gap-5 mx-2">
                       <User2 />
-                      <Button variant="link" className="cursor-pointer">view profile</Button>
+                      <Link to='/profile'>
+                        <Button variant="link" className="cursor-pointer">
+                          view profile
+                        </Button>
+                      </Link>
                     </div>
                     <div className="flex items-center gap-5 mx-2">
                       <LogOut />
-                      <Button variant="link" className="cursor-pointer">logOut</Button>
+                      <Button variant="link" className="cursor-pointer">
+                        logOut
+                      </Button>
                     </div>
                   </div>
                 </div>
