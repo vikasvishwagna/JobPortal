@@ -7,11 +7,31 @@ import {
 import React from "react";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { USERS_API_END_POINT } from "@/utils/constants";
+import { setUser } from "@/redux/authSlice";
+import { toast } from "sonner";
 
 function Navbar() {
   const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async ()=>{
+    try {
+      const res = await axios.get(`${USERS_API_END_POINT}/logout`, {withCredentials: true})
+      if(res.data.success){
+        dispatch(setUser(null));
+        navigate('/')
+        toast.success(res.data.message)
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message)
+    }
+  }
 
   return (
     <div className="bg-white">
@@ -55,7 +75,7 @@ function Navbar() {
                 <Avatar className="w-10 h-10">
                   <AvatarImage
                     className="rounded-full object-cover cursor-pointer"
-                    src="https://github.com/shadcn.png"
+                    src={user?.profile?.profilePhoto}
                   />
                 </Avatar>
               </PopoverTrigger>
@@ -66,14 +86,14 @@ function Navbar() {
                       <Avatar>
                         <AvatarImage
                           className="rounded-full object-cover w-10 h-10"
-                          src="https://github.com/shadcn.png"
+                          src={user?.profile?.profilePhoto}
                         />
                       </Avatar>
                     </div>
                     <div>
-                      <p className="font-medium">Full stack developer</p>
+                      <p className="font-medium">{user?.fullName}</p>
                       <p className="font-light">
-                        Transforming ideas into powerfull solutions!
+                        {user?.profile?.bio}
                       </p>
                     </div>
                   </div>
@@ -89,7 +109,7 @@ function Navbar() {
                     </div>
                     <div className="flex items-center gap-5 mx-2">
                       <LogOut />
-                      <Button variant="link" className="cursor-pointer">
+                      <Button onClick={handleLogout} variant="link" className="cursor-pointer">
                         logOut
                       </Button>
                     </div>

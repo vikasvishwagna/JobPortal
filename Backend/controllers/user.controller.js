@@ -1,11 +1,22 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const registerUser = async (req, res) => {
   try {
     const { fullName, email, phoneNumber, password, role } = req.body;
-    // const{ file } = req.file;
+    const file  = req.file;
+
+    let cloudinaryUrl;
+    if(file){
+      const fileuri = getDataUri(file);
+      cloudinaryUrl = await cloudinary.uploader.upload(fileuri.content, {
+        resource_type: 'image'
+      })
+    }
+
 
     // console.log(fullName, email, phoneNumber, password, role)
 
@@ -32,9 +43,9 @@ export const registerUser = async (req, res) => {
       phoneNumber,
       password: hashedPassword,
       role,
-      // profile: {
-      //   profilePhoto: cloudResponse.secure_url,
-      // },
+      profile:{
+        profilePhoto: cloudinaryUrl.secure_url,
+      }
     });
 
     return res.status(201).json({
@@ -122,22 +133,32 @@ export const logoutUser = async (_, res) => {
     });
   } catch (error) {
     console.log(error);
+    
   }
 };
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const { fullname, email, phoneNumber, bio, skills } = req.body;
+    const { fullName, email, phoneNumber, bio, skills } = req.body;
 
     const file = req.file;
+    // console.log("req.file:", req.file);
+
     // cloudinary 
-    // const fileUri = getDataUri(file);
-    // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    let cloudResponse;
+      if (file) {
+      const fileUri = getDataUri(file);
+       cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+      resource_type: "raw",
+    });
+
+    }
 
     let skillsArray;
     if (skills) {
-      skillsArray = skills.split(",");
+      skillsArray = skills.split(",").map(skill => skill.trim());
     }
+
     const userId = req.id; // middleware authentication
     let user = await User.findById(userId);
 
@@ -148,17 +169,17 @@ export const updateUserProfile = async (req, res) => {
       });
     }
     // updating data
-    if (fullname) user.fullname = fullname;
+    if (fullName) user.fullName = fullName;
     if (email) user.email = email;
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (bio) user.profile.bio = bio;
     if (skills) user.profile.skills = skillsArray;
 
     // resume comes later here...
-    // if (cloudResponse) {
-    //   user.profile.resume = cloudResponse.secure_url; // save the cloudinary url
-    //   user.profile.resumeOriginalName = file.originalname; // Save the original file name
-    // }
+    if (cloudResponse) {
+      user.profile.resume = cloudResponse.secure_url; 
+      user.profile.resumeOriginalName = file.originalname;
+    }
 
     await user.save();
 
@@ -170,6 +191,7 @@ export const updateUserProfile = async (req, res) => {
       role: user.role,
       profile: user.profile,
     };
+    // console.log("user d:", user)
 
     return res.status(200).json({
       message: "Profile updated successfully.",
