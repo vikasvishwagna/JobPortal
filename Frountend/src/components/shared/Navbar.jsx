@@ -19,19 +19,21 @@ function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = async ()=>{
+  const handleLogout = async () => {
     try {
-      const res = await axios.get(`${USERS_API_END_POINT}/logout`, {withCredentials: true})
-      if(res.data.success){
+      const res = await axios.get(`${USERS_API_END_POINT}/logout`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
         dispatch(setUser(null));
-        navigate('/')
-        toast.success(res.data.message)
+        navigate("/");
+        toast.success(res.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message);
     }
-  }
+  };
 
   return (
     <div className="bg-white">
@@ -45,19 +47,29 @@ function Navbar() {
         </div>
 
         <div id="right-items" className=" flex items-center gap-12">
-          <ul className="flex font-medium items-center gap-2">
-            <li>
-              {" "}
-              <Link to="/"> Home </Link>{" "}
-            </li>
-            <li>
-              {" "}
-              <Link to="/jobs"> Jobs </Link>{" "}
-            </li>
-            <li>
-              {" "}
-              <Link to="/browse"> Browse </Link>{" "}
-            </li>
+          <ul className="flex font-medium items-center gap-3">
+            {user && user.role === "recruiter" ? (
+              <>
+                <li>
+                  <Link to="/admin/companies">Companies</Link>
+                </li>
+                <li>
+                  <Link to="/admin/jobs">Jobs</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/jobs">Jobs</Link>
+                </li>
+                <li>
+                  <Link to="/browse">Browse</Link>
+                </li>
+              </>
+            )}
           </ul>
 
           {!user ? (
@@ -75,7 +87,11 @@ function Navbar() {
                 <Avatar className="w-10 h-10">
                   <AvatarImage
                     className="rounded-full object-cover cursor-pointer"
-                    src={user?.profile?.profilePhoto}
+                    src={
+                      user?.profile?.profilePhoto
+                        ? user.profile.profilePhoto
+                        : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                    }
                   />
                 </Avatar>
               </PopoverTrigger>
@@ -86,30 +102,38 @@ function Navbar() {
                       <Avatar>
                         <AvatarImage
                           className="rounded-full object-cover w-10 h-10"
-                          src={user?.profile?.profilePhoto}
+                          src={
+                            user?.profile?.profilePhoto
+                              ? user?.profile?.profilePhoto
+                              : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                          }
                         />
                       </Avatar>
                     </div>
                     <div>
                       <p className="font-medium">{user?.fullName}</p>
-                      <p className="font-light">
-                        {user?.profile?.bio}
-                      </p>
+                      <p className="font-light">{user?.profile?.bio}</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col">
-                    <div className="flex items-center gap-5 mx-2">
-                      <User2 />
-                      <Link to='/profile'>
-                        <Button variant="link" className="cursor-pointer">
-                          view profile
-                        </Button>
-                      </Link>
-                    </div>
+                    {user && user.role === "student" && (
+                      <div className="flex items-center gap-5 mx-2">
+                        <User2 />
+                        <Link to="/profile">
+                          <Button variant="link" className="cursor-pointer">
+                            view profile
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
                     <div className="flex items-center gap-5 mx-2">
                       <LogOut />
-                      <Button onClick={handleLogout} variant="link" className="cursor-pointer">
+                      <Button
+                        onClick={handleLogout}
+                        variant="link"
+                        className="cursor-pointer"
+                      >
                         logOut
                       </Button>
                     </div>

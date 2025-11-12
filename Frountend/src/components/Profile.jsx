@@ -25,7 +25,11 @@ const Profile = () => {
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
               <AvatarImage
-                src={user?.profile?.profilePhoto}
+                src={
+                  user?.profile?.profilePhoto
+                    ? user?.profile?.profilePhoto
+                    : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                }
               />
             </Avatar>
             <div>
