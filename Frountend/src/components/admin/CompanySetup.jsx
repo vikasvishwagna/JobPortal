@@ -8,21 +8,30 @@ import { COMPANY_API_END_POINT } from '@/utils/constants'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { useDispatch, useSelector } from 'react-redux'
+import { setSingleCompany, setUpdatedCompanyData } from '@/redux/companySlice'
+import store from '@/redux/store'
+import useGetCompanyById from '@/hooks/useGetCompanyById'
 
 
 const CompanySetup = () => {
+    const params = useParams();
+    // useGetCompanyById(params.id);
+    useGetCompanyById(params.id)
+    const { singleCompany } = useSelector(state=>state.company);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+   
+
 
     const [input, setInput] = useState({
-        name: "",
-        description: "",
-        website: "",
-        location: "",
-        file: null
+      name: "",
+      description: "",
+      website: "",
+      location: "",
+      file: null
     });
-    // const {singleCompany} = useSelector(store=>store.company);
-    const [loading, setLoading] = useState(false);
-    const params = useParams();
-    const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -52,6 +61,7 @@ const CompanySetup = () => {
                 withCredentials: true
             });
             if (res.data.success) {
+                dispatch(setUpdatedCompanyData(res.data.updatedData))
                 toast.success(res.data.message);
                 navigate("/admin/companies");
             }
@@ -64,6 +74,15 @@ const CompanySetup = () => {
     
     }
     
+    useEffect(() => {
+        setInput({
+            name: singleCompany.name || "",
+            description: singleCompany.description || "",
+            website: singleCompany.website || "",
+            location: singleCompany.location || "",
+            file: singleCompany.file || null
+        })
+    },[singleCompany]);
 
     return (
         <div>

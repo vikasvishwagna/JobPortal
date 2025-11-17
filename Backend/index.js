@@ -31,8 +31,10 @@ app.use('/api/v1/job', jobRoute);
 app.use('/api/v1/application', applicationRout);
 
 
-
-app.listen(PORT,()=>{
-  connectDB();
+connectDB().then(()=>{
+  app.listen(PORT,()=>{
   console.log(`server is running at port ${PORT}`);
+})
+}).catch((error)=>{
+  console.log("mongo db connection error: ", error)
 })
