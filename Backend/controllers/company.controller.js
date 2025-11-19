@@ -34,7 +34,7 @@ export const registerCompany = async (req, res) => {
   }
 };
 
-//list of all companies created by a user.
+//list of all companies created by a admin.
 export const getCompaniesListByUser = async (req, res) => {
   try {
     const userId = req.id; // logged in user id

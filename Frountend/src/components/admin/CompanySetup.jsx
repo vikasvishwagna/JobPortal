@@ -61,6 +61,7 @@ const CompanySetup = () => {
                 withCredentials: true
             });
             if (res.data.success) {
+                console.log(res.data.updatedData)
                 dispatch(setUpdatedCompanyData(res.data.updatedData))
                 toast.success(res.data.message);
                 navigate("/admin/companies");

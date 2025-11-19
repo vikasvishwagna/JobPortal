@@ -100,7 +100,7 @@ const PostJob = () => {
                         <div>
                             <Label>Salary</Label>
                             <Input
-                                type="text"
+                                type="number"
                                 name="salary"
                                 value={input.salary}
                                 onChange={changeEventHandler}

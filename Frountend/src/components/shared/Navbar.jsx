@@ -13,6 +13,9 @@ import axios from "axios";
 import { USERS_API_END_POINT } from "@/utils/constants";
 import { setUser } from "@/redux/authSlice";
 import { toast } from "sonner";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import AiSearchButton from "./AiSearchButton";
+
 
 function Navbar() {
   const { user } = useSelector((store) => store.auth);
@@ -36,7 +39,7 @@ function Navbar() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-gray-100 rounded">
       <div className=" flex items-center justify-between mx-auto max-w-7xl h-16">
         <div className="">
           <h1 className="text-2xl font-bold">
@@ -59,9 +62,12 @@ function Navbar() {
               </>
             ) : (
               <>
-                <li>
-                  <Link to="/">Home</Link>
+                <li >
+                  <Link to="/searchwithai"> <AiSearchButton /> </Link>
                 </li>
+         
+
+
                 <li>
                   <Link to="/jobs">Jobs</Link>
                 </li>

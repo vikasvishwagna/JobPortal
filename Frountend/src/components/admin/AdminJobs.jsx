@@ -9,7 +9,7 @@ import AdminJobsTable from "./AdminJobsTable";
 import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs";
 
 const AdminJobs = () => {
-  useGetAllAdminJobs
+  useGetAllAdminJobs();
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
