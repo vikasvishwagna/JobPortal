@@ -65,8 +65,6 @@ function Navbar() {
                 <li >
                   <Link to="/searchwithai"> <AiSearchButton /> </Link>
                 </li>
-         
-
 
                 <li>
                   <Link to="/jobs">Jobs</Link>

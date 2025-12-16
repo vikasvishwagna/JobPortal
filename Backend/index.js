@@ -7,9 +7,12 @@ import connectDB from './utils/db.js'
 import companyRoute from './routes/company.route.js'
 import jobRoute from './routes/job.route.js'
 import applicationRout from './routes/application.route.js'
+import path from 'path';
 
 dotenv.config({})
 const app = express();
+
+const _dirname = path.resolve();//gives the directary path.
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -29,6 +32,14 @@ app.use('/api/v1/user', userRoute);
 app.use('/api/v1/company', companyRoute);
 app.use('/api/v1/job', jobRoute);
 app.use('/api/v1/application', applicationRout);
+
+app.use(express.static(path.join(_dirname, "/Frountend/dist")));
+// app.get('*', (_,res)=>{
+//   res.sendFile(path.resolve(_dirname, "Frountend", "dist", "index.html"));
+// })
+app.use((req, res) => {
+  res.sendFile(path.resolve(_dirname, "Frountend", "dist", "index.html"));
+});
 
 
 connectDB().then(()=>{

@@ -33,7 +33,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
-    console.log('loading: ', loading)
+    //console.log('loading: ', loading)
     try {
       const res = await axios.post(`${USERS_API_END_POINT}/login`, input, {
         headers: {

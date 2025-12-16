@@ -19,7 +19,7 @@ const ApplicantsTable = () => {
             const res = await axios.put(`${APPLICATIONS_API_END_POINT}/status/${id}/update`, { status });
             console.log(res);
             if (res.data.success) {
-                console.log(res.data.message)
+                //console.log(res.data.message)
                 toast.success(res.data.message);
             }
         } catch (error) {

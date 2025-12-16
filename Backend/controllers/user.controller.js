@@ -92,12 +92,12 @@ export const loginUser = async (req, res) => {
     }
 
     const tokenData = { userId: user._id };
-    console.log("tokenData:", tokenData);//tokenData: { userId: new ObjectId('69027d38e9de6577c87b5e5c') }
+    //console.log("tokenData:", tokenData);//tokenData: { userId: new ObjectId('69027d38e9de6577c87b5e5c') }
 
     const token = await jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "1d",
     });
-    console.log("token", token)//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTAyN2QzOGU5ZGU2NTc3Yzg3YjVlNWMiLCJpYXQiOjE3NjIzMzIwOTQsImV4cCI6MTc2MjQxODQ5NH0.GHBwgXFEjEVBPr27H2famjOSr82f3PwB7CNKWWkHKiM
+    //console.log("token", token)//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTAyN2QzOGU5ZGU2NTc3Yzg3YjVlNWMiLCJpYXQiOjE3NjIzMzIwOTQsImV4cCI6MTc2MjQxODQ5NH0.GHBwgXFEjEVBPr27H2famjOSr82f3PwB7CNKWWkHKiM
 
     user = {
       _id: user._id,
