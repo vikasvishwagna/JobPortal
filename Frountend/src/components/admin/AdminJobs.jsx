@@ -10,6 +10,7 @@ import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs";
 
 const AdminJobs = () => {
   useGetAllAdminJobs();
+  
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
